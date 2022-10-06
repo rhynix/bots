@@ -1,0 +1,30 @@
+#!/bin/env ruby
+
+$LOAD_PATH.unshift File.dirname(__FILE__) + "/../lib"
+
+require "bots"
+
+file  = ARGV.first
+input = File.read(file)
+
+operations = Bots::OperationsDeserializer.new(input).call
+validator  = Bots::Validator.new(operations)
+errors     = validator.call
+
+if errors.any?
+  puts "One or more input errors:"
+
+  errors.each do |error|
+    puts "* #{error}"
+  end
+end
+
+game  = Bots::Game.new(operations)
+state = game.run
+
+outputs        = state.keys.filter { |entity| entity.is_a?(Bots::Output) }
+max_output_len = outputs.map { |output| output.id.to_s.length }.max
+
+outputs.sort_by(&:id).each do |output|
+  puts "#{output.id.to_s.rjust(max_output_len)} => #{state[output].join(", ")}"
+end
