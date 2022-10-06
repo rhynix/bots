@@ -17,6 +17,8 @@ if errors.any?
   errors.each do |error|
     puts "* #{error}"
   end
+
+  exit 1
 end
 
 game  = Bots::Game.new(operations)
