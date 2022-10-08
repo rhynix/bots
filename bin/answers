@@ -1,0 +1,35 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH.unshift File.dirname(__FILE__) + "/../lib"
+
+require "rubygems"
+require "bundler/setup"
+require "set"
+require "bots"
+
+def bot_comparing(values, state)
+  comparisons = state.log.filter { |item| item.is_a?(Bots::BotCompareLogItem) }
+  comparisons.detect { |item| item.values == values }.bot
+end
+
+def product_of_outputs(output_ids, state)
+  values = output_ids.map { |id| state.world[Bots::Output.new(id)].first }
+  values.reduce(&:*)
+end
+
+cli    = Bots::CLI.new($PROGRAM_NAME, ARGV)
+result = cli.run
+
+if result.success?
+  state   = result.out
+  bot     = bot_comparing(Set[61, 17], state)
+  product = product_of_outputs([0, 1, 2], state)
+
+  puts "Bot handling value-61 and value-17: #{bot.id}"
+  puts "Product of output 0, 1, and 2: #{product}"
+
+  exit 0
+else
+  $stderr.puts result.out
+  exit 1
+end

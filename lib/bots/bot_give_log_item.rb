@@ -1,5 +1,5 @@
 module Bots
-  class BotLogItem
+  class BotGiveLogItem
     include Equatable[:from, :to, :value]
 
     attr_reader :from, :to, :value

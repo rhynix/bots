@@ -40,12 +40,16 @@ RSpec.describe Bots::Game do
         expect(result.log).to eq([
           Bots::InputLogItem.new(to: Bots::Bot.new(1), value: 25),
           Bots::InputLogItem.new(to: Bots::Bot.new(1), value: 75),
-          Bots::BotLogItem.new(
+          Bots::BotCompareLogItem.new(
+            bot: Bots::Bot.new(1),
+            values: Set[25, 75],
+          ),
+          Bots::BotGiveLogItem.new(
             from: Bots::Bot.new(1),
             to: Bots::Output.new(1),
             value: 25
           ),
-          Bots::BotLogItem.new(
+          Bots::BotGiveLogItem.new(
             from: Bots::Bot.new(1),
             to: Bots::Output.new(2),
             value: 75
@@ -90,32 +94,44 @@ RSpec.describe Bots::Game do
           Bots::InputLogItem.new(to: Bots::Bot.new(2), value: 5),
           Bots::InputLogItem.new(to: Bots::Bot.new(1), value: 3),
           Bots::InputLogItem.new(to: Bots::Bot.new(2), value: 2),
-          Bots::BotLogItem.new(
+          Bots::BotCompareLogItem.new(
+            bot: Bots::Bot.new(2),
+            values: Set[2, 5]
+          ),
+          Bots::BotGiveLogItem.new(
             from: Bots::Bot.new(2),
             to: Bots::Bot.new(1),
             value: 2
           ),
-          Bots::BotLogItem.new(
+          Bots::BotGiveLogItem.new(
             from: Bots::Bot.new(2),
             to: Bots::Bot.new(0),
             value: 5
           ),
-          Bots::BotLogItem.new(
+          Bots::BotCompareLogItem.new(
+            bot: Bots::Bot.new(1),
+            values: Set[2, 3]
+          ),
+          Bots::BotGiveLogItem.new(
             from: Bots::Bot.new(1),
             to: Bots::Output.new(1),
             value: 2
           ),
-          Bots::BotLogItem.new(
+          Bots::BotGiveLogItem.new(
             from: Bots::Bot.new(1),
             to: Bots::Bot.new(0),
             value: 3
           ),
-          Bots::BotLogItem.new(
+          Bots::BotCompareLogItem.new(
+            bot: Bots::Bot.new(0),
+            values: Set[3, 5]
+          ),
+          Bots::BotGiveLogItem.new(
             from: Bots::Bot.new(0),
             to: Bots::Output.new(2),
             value: 3
           ),
-          Bots::BotLogItem.new(
+          Bots::BotGiveLogItem.new(
             from: Bots::Bot.new(0),
             to: Bots::Output.new(0),
             value: 5

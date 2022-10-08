@@ -10,8 +10,9 @@ module Bots
   autoload :PreValidator,  "bots/pre_validator"
   autoload :PostValidator, "bots/post_validator"
 
-  autoload :BotLogItem,   "bots/bot_log_item"
-  autoload :InputLogItem, "bots/input_log_item"
+  autoload :BotGiveLogItem,    "bots/bot_give_log_item"
+  autoload :BotCompareLogItem, "bots/bot_compare_log_item"
+  autoload :InputLogItem,      "bots/input_log_item"
 
   autoload :InputOperation,  "bots/input_operation"
   autoload :BotOperation,    "bots/bot_operation"
