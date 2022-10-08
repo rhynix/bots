@@ -16,23 +16,17 @@ module Bots
       inputs             = deserialize(request.body.read) or bad_request
       deserialize_result = OperationsParser.new(inputs).call
 
-      if deserialize_result.errors.any?
-        bad_request deserialize_result.errors
-      end
+      bad_request deserialize_result.errors if deserialize_result.errors.any?
 
       operations = deserialize_result.operations
       pre_errors = PreValidator.new(operations).call
 
-      if pre_errors.any?
-        bad_request pre_errors
-      end
+      bad_request pre_errors if pre_errors.any?
 
       state       = run_game_with_timeout(operations)
       post_errors = PostValidator.new(operations, state.world).call
 
-      if post_errors.any?
-        bad_request post_errors
-      end
+      bad_request post_errors if post_errors.any?
 
       JSON.dump(serialize_outputs(state))
     end

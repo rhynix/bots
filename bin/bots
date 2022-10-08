@@ -13,9 +13,9 @@ result = cli.run
 if result.success?
   state = result.out
 
-  $stdout.puts state.format
+  puts state.format
   exit 0
 else
-  $stderr.puts result.out
+  warn result.out
   exit 1
 end

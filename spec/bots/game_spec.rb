@@ -44,7 +44,7 @@ RSpec.describe Bots::Game do
           Bots::InputLogItem.new(to: Bots::Bot.new(1), value: 75),
           Bots::BotCompareLogItem.new(
             bot: Bots::Bot.new(1),
-            values: Set[25, 75],
+            values: Set[25, 75]
           ),
           Bots::BotGiveLogItem.new(
             from: Bots::Bot.new(1),
@@ -145,7 +145,7 @@ RSpec.describe Bots::Game do
         expect(result.world).to include({
           Bots::Output.new(0) => [5],
           Bots::Output.new(1) => [2],
-          Bots::Output.new(2) => [3],
+          Bots::Output.new(2) => [3]
         })
       end
     end

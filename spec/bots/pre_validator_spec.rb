@@ -23,7 +23,7 @@ RSpec.describe Bots::PreValidator do
         Bots::InputOperation.new(to: Bots::Bot.new(2), value: 6),
         Bots::InputOperation.new(to: Bots::Bot.new(2), value: 8),
         Bots::InputOperation.new(to: Bots::Bot.new(6), value: 11),
-        Bots::InputOperation.new(to: Bots::Bot.new(6), value: 5),
+        Bots::InputOperation.new(to: Bots::Bot.new(6), value: 5)
       ])
 
       expect(validator.call).to include(
