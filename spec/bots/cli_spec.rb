@@ -14,28 +14,10 @@ RSpec.describe Bots::CLI do
   end
 
   describe "#call" do
-    context "not enough arguments were provided" do
-      let(:result) { described_class.new("bots", []).run }
-
-      it "returns failure" do
-        cli    = described_class.new("bots", [])
-        result = cli.run
-
-        expect(result.success?).to be(false)
-      end
-
-      it "returns the usage as out" do
-        cli    = described_class.new("bots", [])
-        result = cli.run
-
-        expect(result.out).to eq("usage: bots input-file")
-      end
-    end
-
     context "the input is invalid" do
       let(:result) do
         with_input_file("value 1 goes to bot 1") do |path|
-          cli = described_class.new("bots", [path])
+          cli = described_class.new(path)
           cli.run
         end
       end
@@ -45,9 +27,9 @@ RSpec.describe Bots::CLI do
       end
 
       it "returns the errors as out" do
-        expect(result.out).to eq(<<~OUT)
-          One or more input errors:
-          * Bot 1 has no operations
+        expect(result.out.formatted).to eq(<<~OUT)
+          input errors:
+            bot(1) has no operations
         OUT
       end
     end
@@ -63,7 +45,7 @@ RSpec.describe Bots::CLI do
 
       let(:result) do
         with_input_file(input) do |path|
-          cli = described_class.new("bots", [path])
+          cli = described_class.new(path)
           cli.run
         end
       end
@@ -73,7 +55,7 @@ RSpec.describe Bots::CLI do
       end
 
       it "returns the log and outputs as out" do
-        expect(result.out.format).to eq(<<~OUT)
+        expect(result.out.formatted).to eq(<<~OUT)
           log:
             1 goes to bot(1)
             2 goes to bot(1)
@@ -97,7 +79,7 @@ RSpec.describe Bots::CLI do
 
       let(:result) do
         with_input_file(input) do |path|
-          cli = described_class.new("bots", [path])
+          cli = described_class.new(path)
           cli.run
         end
       end
@@ -107,9 +89,9 @@ RSpec.describe Bots::CLI do
       end
 
       it "returns the errors as out" do
-        expect(result.out).to eq(<<~OUT)
-          One or more output errors:
-          * Output 1 received multiple values: 1, 2
+        expect(result.out.formatted).to eq(<<~OUT)
+          output errors:
+            output(1) received multiple values: 1, 2
         OUT
       end
     end

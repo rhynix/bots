@@ -39,7 +39,7 @@ RSpec.describe Bots::GameState do
     end
   end
 
-  describe "#format" do
+  describe "#formatted" do
     it "includes log items" do
       state = described_class.new(
         log: [
@@ -48,7 +48,7 @@ RSpec.describe Bots::GameState do
         ]
       )
 
-      expect(state.format).to include(<<~EOF)
+      expect(state.formatted).to include(<<~EOF)
         log:
           6 goes to output(42)
           12 goes to bot(42)
@@ -63,7 +63,7 @@ RSpec.describe Bots::GameState do
         }
       )
 
-      expect(state.format).to include(<<~EOF)
+      expect(state.formatted).to include(<<~EOF)
         world:
           output(42) = 6
           bot(43) = 3

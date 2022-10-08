@@ -17,7 +17,7 @@ module Bots
       self.class.new(log: log, world: { **world, **updates })
     end
 
-    def format
+    def formatted
       out = String.new
       out << "log:\n"
 

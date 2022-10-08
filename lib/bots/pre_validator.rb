@@ -24,9 +24,9 @@ module Bots
       all_bots.flat_map do |bot|
         case bot_operations.fetch(bot, []).length
         when 0
-          [AssertionError.new("Bot #{bot.id} has no operations")]
+          [Error.new("#{bot} has no operations")]
         when (2..)
-          [AssertionError.new("Bot #{bot.id} has more than one operation")]
+          [Error.new("#{bot} has more than one operation")]
         else
           []
         end
@@ -38,10 +38,10 @@ module Bots
       start_bots = bots.filter { |b| goes_to_operations_per_bot[b].length == 2 }
 
       if start_bots.length > 1
-        bot_ids = start_bots.map(&:id).join(", ")
-        message = "Multiple bots start with two values: #{bot_ids}"
+        start_bots = start_bots.join(", ")
+        message    = "multiple bots start with two values: #{start_bots}"
 
-        [AssertionError.new(message)]
+        [Error.new(message)]
       else
         []
       end
@@ -50,7 +50,7 @@ module Bots
     def validate_max_two_values_per_bot
       goes_to_operations_per_bot.flat_map do |bot, ops|
         if ops.length > 2
-          [AssertionError.new("Bot #{bot.id} starts with more than two values")]
+          [Error.new("#{bot} starts with more than two values")]
         else
           []
         end

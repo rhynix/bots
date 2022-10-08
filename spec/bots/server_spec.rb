@@ -76,8 +76,8 @@ RSpec.describe Bots::Server do
         post "/", body
 
         expect(parsed_body).to eq({
-          "error" => [
-            "Output 1 received multiple values: 1, 2"
+          "errors" => [
+            "output(1) received multiple values: 1, 2"
           ]
         })
       end

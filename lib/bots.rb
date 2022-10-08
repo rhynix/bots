@@ -6,8 +6,10 @@ module Bots
   autoload :GameState,        "bots/game_state"
   autoload :CLI,              "bots/cli"
   autoload :Equatable,        "bots/equatable"
-  autoload :AssertionError,   "bots/assertion_error"
   autoload :Server,           "bots/server"
+
+  autoload :Error,  "bots/error"
+  autoload :Errors, "bots/errors"
 
   autoload :PreValidator,  "bots/pre_validator"
   autoload :PostValidator, "bots/post_validator"

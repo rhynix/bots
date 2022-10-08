@@ -2,7 +2,6 @@
 
 module Bots
   class OperationsParser
-    Error  = Class.new(RuntimeError)
     Result = Struct.new(:operations, :errors)
 
     ENTITY_REGEXP   = /\A(?<type>\w+) (?<id>\d+)\Z/i
@@ -22,7 +21,7 @@ module Bots
         if operation = deserialize(input)
           result.operations << operation
         else
-          result.errors << Error.new("Invalid input: #{input}")
+          result.errors << Error.new("invalid input: #{input}")
         end
       end
 

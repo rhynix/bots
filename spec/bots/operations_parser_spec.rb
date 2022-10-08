@@ -82,8 +82,8 @@ RSpec.describe Bots::OperationsParser do
       ])
 
       expect(deserializer.call.errors).to eq([
-        Bots::OperationsParser::Error.new(
-          "Invalid input: bot 13 takes low from bot 203 and high from bot 197"
+        Bots::Error.new(
+          "invalid input: bot 13 takes low from bot 203 and high from bot 197"
         )
       ])
     end
@@ -95,8 +95,8 @@ RSpec.describe Bots::OperationsParser do
       ])
 
       expect(deserializer.call.errors).to eq([
-        Bots::OperationsParser::Error.new(
-          "Invalid input: bot 13 gives low to human 203 and high to bot 197"
+        Bots::Error.new(
+          "invalid input: bot 13 gives low to human 203 and high to bot 197"
         )
       ])
     end

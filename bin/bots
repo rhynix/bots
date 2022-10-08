@@ -7,15 +7,18 @@ require "rubygems"
 require "bundler/setup"
 require "bots"
 
-cli    = Bots::CLI.new($PROGRAM_NAME, ARGV)
+unless ARGV.length == 1
+  warn "usage: #{$0} input-file"
+  exit 1
+end
+
+cli    = Bots::CLI.new(ARGV.first)
 result = cli.run
 
 if result.success?
-  state = result.out
-
-  puts state.format
+  puts result.out.formatted
   exit 0
 else
-  warn result.out
+  warn result.out.formatted
   exit 1
 end

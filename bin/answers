@@ -18,7 +18,12 @@ def product_of_outputs(output_ids, state)
   values.reduce(&:*)
 end
 
-cli    = Bots::CLI.new($PROGRAM_NAME, ARGV)
+unless ARGV.length == 1
+  warn "usage: #{$0} input-file"
+  exit 1
+end
+
+cli    = Bots::CLI.new(ARGV.first)
 result = cli.run
 
 if result.success?
@@ -31,6 +36,6 @@ if result.success?
 
   exit 0
 else
-  $stderr.puts result.out
+  warn result.out.formatted
   exit 1
 end

@@ -27,7 +27,7 @@ RSpec.describe Bots::PreValidator do
       ])
 
       expect(validator.call).to include(
-        Bots::AssertionError.new("Multiple bots start with two values: 2, 6")
+        Bots::Error.new("multiple bots start with two values: bot(2), bot(6)")
       )
     end
 
@@ -41,7 +41,7 @@ RSpec.describe Bots::PreValidator do
       ])
 
       expect(validator.call).to include(
-        Bots::AssertionError.new("Bot 2 starts with more than two values")
+        Bots::Error.new("bot(2) starts with more than two values")
       )
     end
 
@@ -60,7 +60,7 @@ RSpec.describe Bots::PreValidator do
       ])
 
       expect(validator.call).to eq([
-        Bots::AssertionError.new("Bot 2 has more than one operation")
+        Bots::Error.new("bot(2) has more than one operation")
       ])
     end
 
@@ -70,7 +70,7 @@ RSpec.describe Bots::PreValidator do
       ])
 
       expect(validator.call).to eq([
-        Bots::AssertionError.new("Bot 2 has no operations")
+        Bots::Error.new("bot(2) has no operations")
       ])
     end
   end

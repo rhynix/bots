@@ -70,8 +70,11 @@ module Bots
       true
     end
 
-    def bad_request(error = "bad request")
-      halt 400, JSON.dump({ "error" => error })
+    def bad_request(error_or_errors = "bad request")
+      key      = error_or_errors.is_a?(Array) ? "errors" : "error"
+      response = JSON.dump({ key => error_or_errors })
+
+      halt 400, response
     end
   end
 end
