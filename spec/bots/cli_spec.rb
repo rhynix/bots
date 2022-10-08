@@ -13,43 +13,37 @@ RSpec.describe Bots::CLI do
 
   describe "#call" do
     context "not enough arguments were provided" do
-      it "prints the usage" do
-        out = StringIO.new
-        cli = described_class.new("bots", [], out)
-        cli.run
+      let(:result) { described_class.new("bots", []).run }
 
-        expect(out.string.strip).to eq("usage: bots input-file")
+      it "returns failure" do
+        cli    = described_class.new("bots", [])
+        result = cli.run
+
+        expect(result.success?).to be(false)
       end
 
-      it "returns false" do
-        out = StringIO.new
-        cli = described_class.new("bots", [], out)
+      it "returns the usage as out" do
+        cli    = described_class.new("bots", [])
+        result = cli.run
 
-        expect(cli.run).to be(false)
+        expect(result.out).to eq("usage: bots input-file")
       end
     end
 
     context "the input is invalid" do
-      it "returns false" do
-        out   = StringIO.new
-        input = "value 1 goes to bot 1"
-
-        with_input_file(input) do |path|
-          cli = described_class.new("bots", [path], out)
-          expect(cli.run).to be(false)
+      let(:result) do
+        with_input_file("value 1 goes to bot 1") do |path|
+          cli = described_class.new("bots", [path])
+          cli.run
         end
       end
 
-      it "prints the errors" do
-        out   = StringIO.new
-        input = "value 1 goes to bot 1"
+      it "returns failure" do
+        expect(result.success?).to be(false)
+      end
 
-        with_input_file(input) do |path|
-          cli = described_class.new("bots", [path], out)
-          cli.run
-        end
-
-        expect(out.string).to eq(<<~OUT)
+      it "returns the errors as out" do
+        expect(result.out).to eq(<<~OUT)
           One or more input errors:
           * Bot 1 has no operations
         OUT
@@ -57,34 +51,27 @@ RSpec.describe Bots::CLI do
     end
 
     context "the game is successful" do
-      it "returns true" do
-        out = StringIO.new
-        input = <<~INPUT
+      let(:input) do
+        <<~INPUT
           value 1 goes to bot 1
           value 2 goes to bot 1
           bot 1 gives low to output 2 and high to output 1
         INPUT
+      end
 
+      let(:result) do
         with_input_file(input) do |path|
-          cli = described_class.new("bots", [path], out)
-          expect(cli.run).to be(true)
+          cli = described_class.new("bots", [path])
+          cli.run
         end
       end
 
-      it "prints the outputs" do
-        out = StringIO.new
-        input = <<~INPUT
-          value 1 goes to bot 1
-          value 2 goes to bot 1
-          bot 1 gives low to output 2 and high to output 1
-        INPUT
+      it "returns success" do
+        expect(result.success?).to be(true)
+      end
 
-        with_input_file(input) do |path|
-          cli = described_class.new("bots", [path], out)
-          cli.run
-        end
-
-        expect(out.string).to eq(<<~OUT)
+      it "returns the outputs as out" do
+        expect(result.out).to eq(<<~OUT)
           output( 1 ) = 2
           output( 2 ) = 1
         OUT
@@ -92,32 +79,26 @@ RSpec.describe Bots::CLI do
     end
 
     context "the output is invalid" do
-      it "returns true" do
-        out = StringIO.new
-        input = <<~INPUT
+      let(:input) do
+        <<~INPUT
           value 1 goes to output 1
           value 2 goes to output 1
         INPUT
+      end
 
+      let(:result) do
         with_input_file(input) do |path|
-          cli = described_class.new("bots", [path], out)
-          expect(cli.run).to be(false)
+          cli = described_class.new("bots", [path])
+          cli.run
         end
       end
 
-      it "prints the outputs" do
-        out = StringIO.new
-        input = <<~INPUT
-          value 1 goes to output 1
-          value 2 goes to output 1
-        INPUT
+      it "returns failure" do
+        expect(result.success?).to be(false)
+      end
 
-        with_input_file(input) do |path|
-          cli = described_class.new("bots", [path], out)
-          cli.run
-        end
-
-        expect(out.string).to eq(<<~OUT)
+      it "returns the errors as out" do
+        expect(result.out).to eq(<<~OUT)
           One or more output errors:
           * Output 1 received multiple values: 1, 2
         OUT

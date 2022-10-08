@@ -1,11 +1,18 @@
-#!/bin/env ruby
+#!/usr/bin/env ruby
 
 $LOAD_PATH.unshift File.dirname(__FILE__) + "/../lib"
 
+require "rubygems"
+require "bundler/setup"
 require "bots"
 
-if Bots::CLI.new($PROGRAM_NAME, ARGV, $stdout).run
+cli    = Bots::CLI.new($PROGRAM_NAME, ARGV)
+result = cli.run
+
+if result.success?
+  $stdout.puts result.out
   exit 0
 else
+  $stderr.puts result.out
   exit 1
 end

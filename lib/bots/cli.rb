@@ -1,47 +1,50 @@
 module Bots
   class CLI
-    EXIT_SUCCESS = 0
-    EXIT_FAILURE = 1
+    Result = Struct.new(:success?, :out)
 
-    attr_reader :exe, :args, :out
+    attr_reader :exe, :args
 
-    def initialize(exe, args, out)
+    def initialize(exe, args)
       @exe  = exe
       @args = args
-      @out  = out
     end
 
     def run
-      unless args.length == 1
-        put_usage
-        return false
-      end
+      return failure("usage: #{exe} input-file") unless args.length == 1
 
-      input      = File.read(args.first)
-      operations = OperationsDeserializer.new(input).call
+      input  = File.read(args.first)
+      inputs = input.lines.map(&:strip)
+
+      input_result = OperationsDeserializer.new(inputs).call
+      input_errors = input_result.errors
+
+      return failure(format_errors("input", input_errors)) if input_errors.any?
+
+      operations = input_result.operations
       pre_errors = PreValidator.new(operations).call
 
-      if pre_errors.any?
-        put_errors "input", pre_errors
-        return false
-      end
+      return failure(format_errors("input", pre_errors)) if pre_errors.any?
 
-      state       = Bots::Game.new(operations).run
-      post_errors = Bots::PostValidator.new(operations, state).call
+      state       = Game.new(operations).run
+      post_errors = PostValidator.new(operations, state).call
 
-      if post_errors.any?
-        put_errors "output", post_errors
-        return false
-      end
-
-      put_outputs(state)
-
-      true
+      return failure(format_errors("output", post_errors)) if post_errors.any?
+      return success(format_outputs(state))
     end
 
     private
 
-    def put_outputs(state)
+    def success(out)
+      Result.new(true, out)
+    end
+
+    def failure(out)
+      Result.new(false, out)
+    end
+
+    def format_outputs(state)
+      out = String.new
+
       outputs        = state.keys.filter { |entity| entity.is_a?(Output) }
       max_output_len = outputs.map { |output| output.id.to_s.length }.max
 
@@ -49,20 +52,24 @@ module Bots
         output_id = output.id.to_s.rjust(max_output_len)
         values    = state[output].join(", ")
 
-        out.puts "output( #{output_id} ) = #{values}"
+        out << "output( #{output_id} ) = #{values}\n"
       end
+
+      out
     end
 
-    def put_errors(type, errors)
-      out.puts "One or more #{type} errors:"
+    def format_errors(type, errors)
+      out = String.new
+      out << "One or more #{type} errors:\n"
 
       errors.each do |error|
-        out.puts "* #{error.message}"
+        out << "* #{error.message}\n"
       end
+
+      out
     end
 
     def put_usage
-      out.puts "usage: #{exe} input-file"
     end
   end
 end
