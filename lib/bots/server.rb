@@ -1,4 +1,5 @@
 require "sinatra/base"
+require "timeout"
 
 module Bots
   class Server < Sinatra::Base
@@ -24,7 +25,7 @@ module Bots
         bad_request pre_errors
       end
 
-      state       = Game.new(operations).run
+      state       = run_game_with_timeout(operations)
       post_errors = PostValidator.new(operations, state.world).call
 
       if post_errors.any?
@@ -35,6 +36,12 @@ module Bots
     end
 
     private
+
+    def run_game_with_timeout(operations)
+      Game.new(operations).run
+    rescue Timeout::Error
+      bad_request "timeout"
+    end
 
     def serialize_outputs(state)
       outputs = state.world
