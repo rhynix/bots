@@ -1,3 +1,5 @@
+require "timeout"
+
 module Bots
   class Game
     attr_reader :operations
@@ -6,11 +8,13 @@ module Bots
       @operations = operations
     end
 
-    def run
+    def run(timeout: 5)
       state = {}
 
-      state = run_ops(state, ops_of_type(GoesToOperation))
-      state = run_ops(state, ops_of_type(GivesToOperation)) until done?(state)
+      Timeout.timeout(timeout) do
+        state = run_ops(state, ops_of_type(GoesToOperation))
+        state = run_ops(state, ops_of_type(GivesToOperation)) until done?(state)
+      end
 
       state
     end
