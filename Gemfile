@@ -3,4 +3,7 @@ source 'https://rubygems.org'
 gem "sinatra", "~> 3.0"
 gem "puma", "~> 5.6"
 
-gem "rspec", "~> 3.11", group: :test
+group :test do
+  gem "rspec", "~> 3.11"
+  gem "rack-test", "~> 2.0"
+end
