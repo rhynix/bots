@@ -10,10 +10,10 @@ module Bots
     end
 
     def run_on(state)
-      executions    = [InputExecution.new(to: to, value: value)]
+      log_items     = [InputLogItem.new(to: to, value: value)]
       updated_state = { **state, to => [*state[to], value] }
 
-      [executions, updated_state]
+      [log_items, updated_state]
     end
   end
 end

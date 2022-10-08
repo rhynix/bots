@@ -16,9 +16,9 @@ module Bots
       low_value  = state[from].min
       high_value = state[from].max
 
-      executions = [
-        BotExecution.new(from: from, to: low_to, value: low_value),
-        BotExecution.new(from: from, to: high_to, value: high_value)
+      log_items = [
+        BotLogItem.new(from: from, to: low_to, value: low_value),
+        BotLogItem.new(from: from, to: high_to, value: high_value)
       ]
 
       updated_state = {
@@ -28,7 +28,7 @@ module Bots
         high_to => [*state[high_to], state[from].max]
       }
 
-      [executions, updated_state]
+      [log_items, updated_state]
     end
   end
 end

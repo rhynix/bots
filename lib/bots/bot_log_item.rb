@@ -1,5 +1,5 @@
 module Bots
-  class BotExecution
+  class BotLogItem
     attr_reader :from, :to, :value
 
     def initialize(from:, to:, value:)

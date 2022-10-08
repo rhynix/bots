@@ -33,8 +33,8 @@ module Bots
 
     def run_ops(state, ops)
       ops.reduce(state) do |acc, operation|
-        executions, current = operation.run_on(acc[:current])
-        log = [*acc[:log], *executions]
+        log_items, current = operation.run_on(acc[:current])
+        log = [*acc[:log], *log_items]
 
         { log: log, current: current }
       end
