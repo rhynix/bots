@@ -17,7 +17,7 @@ module Bots
     private
 
     def _run
-      state = { log: [], current: {} }
+      state = GameState.new
 
       state = run_ops(state, ops(InputOperation))
       state = run_ops(state, ops(BotOperation)) until done?(state)
@@ -26,18 +26,12 @@ module Bots
     end
 
     def done?(state)
-      current = state[:current]
-      bots_current = current.filter { |entity| entity.is_a?(Bot) }
-      bots_current.values.all?(&:empty?)
+      bots = state.world.filter { |entity| entity.is_a?(Bot) }
+      bots.values.all?(&:empty?)
     end
 
     def run_ops(state, ops)
-      ops.reduce(state) do |acc, operation|
-        log_items, current = operation.run_on(acc[:current])
-        log = [*acc[:log], *log_items]
-
-        { log: log, current: current }
-      end
+      ops.reduce(state) { |state, operation| operation.run_on(state) }
     end
 
     def ops(type)

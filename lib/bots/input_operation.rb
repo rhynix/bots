@@ -10,10 +10,9 @@ module Bots
     end
 
     def run_on(state)
-      log_items     = [InputLogItem.new(to: to, value: value)]
-      updated_state = { **state, to => [*state[to], value] }
-
-      [log_items, updated_state]
+      state
+        .add_to_log(InputLogItem.new(to: to, value: value))
+        .update_world({ to => [*state.world[to], value] })
     end
   end
 end

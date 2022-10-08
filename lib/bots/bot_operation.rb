@@ -11,24 +11,21 @@ module Bots
     end
 
     def run_on(state)
-      return [[], state] unless state[from] && state[from].length == 2
+      return state unless state.world.fetch(from, []).length == 2
 
-      low_value  = state[from].min
-      high_value = state[from].max
+      world = state.world
 
-      log_items = [
-        BotLogItem.new(from: from, to: low_to, value: low_value),
-        BotLogItem.new(from: from, to: high_to, value: high_value)
-      ]
+      low_value  = world[from].min
+      high_value = world[from].max
 
-      updated_state = {
-        **state,
-        from    => [],
-        low_to  => [*state[low_to],  state[from].min],
-        high_to => [*state[high_to], state[from].max]
-      }
-
-      [log_items, updated_state]
+      state
+        .add_to_log(BotLogItem.new(from: from, to: low_to, value: low_value))
+        .add_to_log(BotLogItem.new(from: from, to: high_to, value: high_value))
+        .update_world({
+          from    => [],
+          low_to  => [*world[low_to],  low_value],
+          high_to => [*world[high_to], high_value]
+        })
     end
   end
 end

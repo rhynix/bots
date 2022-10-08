@@ -10,7 +10,9 @@ cli    = Bots::CLI.new($PROGRAM_NAME, ARGV)
 result = cli.run
 
 if result.success?
-  $stdout.puts result.out
+  state = result.out
+
+  $stdout.puts state.format
   exit 0
 else
   $stderr.puts result.out

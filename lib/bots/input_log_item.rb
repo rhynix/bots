@@ -1,5 +1,7 @@
 module Bots
   class InputLogItem
+    include Equatable[:to, :value]
+
     attr_reader :to, :value
 
     def initialize(to:, value:)

@@ -25,7 +25,7 @@ module Bots
       end
 
       state       = Game.new(operations).run
-      post_errors = PostValidator.new(operations, state).call
+      post_errors = PostValidator.new(operations, state.world).call
 
       if post_errors.any?
         bad_request post_errors
@@ -37,12 +37,15 @@ module Bots
     private
 
     def serialize_outputs(state)
-      outputs = state.keys.filter { |entity| entity.is_a?(Output) }
-      result  = state.slice(*outputs)
-
-      result
+      outputs = state.world
+        .filter { |entity| entity.is_a?(Output) }
         .transform_keys { |output| output.id.to_s }
         .transform_values(&:first)
+
+      {
+        log: state.log,
+        outputs: outputs
+      }
     end
 
     def deserialize(input)

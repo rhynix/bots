@@ -71,7 +71,7 @@ RSpec.describe Bots::CLI do
       end
 
       it "returns the log and outputs as out" do
-        expect(result.out).to eq(<<~OUT)
+        expect(result.out.format).to eq(<<~OUT)
           log:
             1 goes to bot(1)
             2 goes to bot(1)
