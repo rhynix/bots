@@ -26,10 +26,11 @@ module Bots
       return failure(format_errors("input", pre_errors)) if pre_errors.any?
 
       state       = Game.new(operations).run
-      post_errors = PostValidator.new(operations, state).call
+      post_errors = PostValidator.new(operations, state[:current]).call
 
       return failure(format_errors("output", post_errors)) if post_errors.any?
-      return success(format_outputs(state))
+
+      return success(format_state(state))
     end
 
     private
@@ -42,17 +43,28 @@ module Bots
       Result.new(false, out)
     end
 
-    def format_outputs(state)
+    def format_state(state)
+      log     = state[:log]
+      current = state[:current]
+
       out = String.new
 
-      outputs        = state.keys.filter { |entity| entity.is_a?(Output) }
+      out << "log:\n"
+
+      log.each do |log_item|
+        out << "  #{log_item.to_s}\n"
+      end
+
+      outputs        = current.keys.filter { |entity| entity.is_a?(Output) }
       max_output_len = outputs.map { |output| output.id.to_s.length }.max
+
+      out << "outputs:\n"
 
       outputs.sort_by(&:id).each do |output|
         output_id = output.id.to_s.rjust(max_output_len)
-        values    = state[output].join(", ")
+        values    = current[output].join(", ")
 
-        out << "output( #{output_id} ) = #{values}\n"
+        out << "  output( #{output_id} ) = #{values}\n"
       end
 
       out

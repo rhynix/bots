@@ -7,5 +7,9 @@ module Bots
     def initialize(id)
       @id = id
     end
+
+    def to_s
+      "bot(#{id})"
+    end
   end
 end

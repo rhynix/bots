@@ -8,6 +8,9 @@ module Bots
   autoload :AssertionError,         "bots/assertion_error"
   autoload :Server,                 "bots/server"
 
+  autoload :BotExecution,   "bots/bot_execution"
+  autoload :InputExecution, "bots/input_execution"
+
   autoload :GoesToOperation,  "bots/goes_to_operation"
   autoload :GivesToOperation, "bots/gives_to_operation"
 

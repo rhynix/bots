@@ -9,30 +9,38 @@ module Bots
     end
 
     def run(timeout: 5)
-      state = {}
-
       Timeout.timeout(timeout) do
-        state = run_ops(state, ops_of_type(GoesToOperation))
-        state = run_ops(state, ops_of_type(GivesToOperation)) until done?(state)
+        _run
       end
-
-      state
     end
 
     private
 
-    def done?(state)
-      bot_keys   = state.keys.filter { |entity| entity.is_a?(Bot) }
-      bot_values = state.values_at(*bot_keys)
+    def _run
+      state = { log: [], current: {} }
 
-      bot_values.all?(&:empty?)
+      state = run_ops(state, ops(GoesToOperation))
+      state = run_ops(state, ops(GivesToOperation)) until done?(state)
+
+      state
+    end
+
+    def done?(state)
+      current = state[:current]
+      bots_current = current.filter { |entity| entity.is_a?(Bot) }
+      bots_current.values.all?(&:empty?)
     end
 
     def run_ops(state, ops)
-      ops.reduce(state) { |acc, operation| operation.run_on(acc) }
+      ops.reduce(state) do |acc, operation|
+        executions, current = operation.run_on(acc[:current])
+        log = [*acc[:log], *executions]
+
+        { log: log, current: current }
+      end
     end
 
-    def ops_of_type(type)
+    def ops(type)
       operations.filter { |operation| operation.is_a?(type) }
     end
   end

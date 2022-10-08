@@ -8,7 +8,7 @@ RSpec.describe Bots::Game do
         Bots::GoesToOperation.new(to: Bots::Output.new(100), value: 50)
       ])
 
-      expect(game.run).to eq({
+      expect(game.run[:current]).to eq({
         Bots::Output.new(100) => [50]
       })
     end
@@ -24,7 +24,7 @@ RSpec.describe Bots::Game do
         )
       ])
 
-      expect(game.run).to include({
+      expect(game.run[:current]).to include({
         Bots::Output.new(1) => [25],
         Bots::Output.new(2) => [75]
       })
@@ -47,7 +47,7 @@ RSpec.describe Bots::Game do
         )
       ])
 
-      expect(game.run).to include({
+      expect(game.run[:current]).to include({
         Bots::Output.new(1) => [10],
         Bots::Output.new(2) => [30],
         Bots::Output.new(3) => [20],

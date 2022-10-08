@@ -70,10 +70,16 @@ RSpec.describe Bots::CLI do
         expect(result.success?).to be(true)
       end
 
-      it "returns the outputs as out" do
+      it "returns the log and outputs as out" do
         expect(result.out).to eq(<<~OUT)
-          output( 1 ) = 2
-          output( 2 ) = 1
+          log:
+            1 goes to bot(1)
+            2 goes to bot(1)
+            bot(1) gives 1 to output(2)
+            bot(1) gives 2 to output(1)
+          outputs:
+            output( 1 ) = 2
+            output( 2 ) = 1
         OUT
       end
     end

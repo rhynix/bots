@@ -10,12 +10,10 @@ module Bots
     end
 
     def run_on(state)
-      new_values = [*state[to], value]
+      executions    = [InputExecution.new(to: to, value: value)]
+      updated_state = { **state, to => [*state[to], value] }
 
-      {
-        **state,
-        to => new_values
-      }
+      [executions, updated_state]
     end
   end
 end
