@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bots
   class PreValidator
     attr_reader :operations

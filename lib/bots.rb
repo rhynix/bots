@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bots
   autoload :OperationsParser, "bots/operations_parser"
   autoload :Game,             "bots/game"

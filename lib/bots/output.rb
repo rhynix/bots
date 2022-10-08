@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bots
   class Output
     include Equatable[:id]

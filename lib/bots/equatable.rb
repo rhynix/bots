@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bots
   # Equatable is a module that contains a single method that creates an
   # anonymous module. This anonymous module defines methods that can be used

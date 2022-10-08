@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bots
   class GameState
     attr_reader :log, :world

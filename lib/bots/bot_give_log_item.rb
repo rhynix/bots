@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bots
   class BotGiveLogItem
     include Equatable[:from, :to, :value]
