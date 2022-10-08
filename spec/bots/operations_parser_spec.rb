@@ -1,6 +1,6 @@
 require "spec_helper"
 
-RSpec.describe Bots::OperationsDeserializer do
+RSpec.describe Bots::OperationsParser do
   describe "#operations" do
     it "returns deserialized goes to operations" do
       deserializer = described_class.new([
@@ -80,7 +80,7 @@ RSpec.describe Bots::OperationsDeserializer do
       ])
 
       expect(deserializer.call.errors).to eq([
-        Bots::OperationsDeserializer::Error.new(
+        Bots::OperationsParser::Error.new(
           "Invalid input: bot 13 takes low from bot 203 and high from bot 197"
         )
       ])
@@ -93,7 +93,7 @@ RSpec.describe Bots::OperationsDeserializer do
       ])
 
       expect(deserializer.call.errors).to eq([
-        Bots::OperationsDeserializer::Error.new(
+        Bots::OperationsParser::Error.new(
           "Invalid input: bot 13 gives low to human 203 and high to bot 197"
         )
       ])

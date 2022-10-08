@@ -12,7 +12,7 @@ module Bots
       content_type :json
 
       inputs             = deserialize(request.body.read) or bad_request
-      deserialize_result = OperationsDeserializer.new(inputs).call
+      deserialize_result = OperationsParser.new(inputs).call
 
       if deserialize_result.errors.any?
         bad_request deserialize_result.errors

@@ -1,5 +1,5 @@
 module Bots
-  class OperationsDeserializer
+  class OperationsParser
     Error  = Class.new(RuntimeError)
     Result = Struct.new(:operations, :errors)
 

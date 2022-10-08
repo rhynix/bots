@@ -15,7 +15,7 @@ module Bots
       input  = File.read(args.first)
       inputs = input.lines.map(&:strip)
 
-      input_result = OperationsDeserializer.new(inputs).call
+      input_result = OperationsParser.new(inputs).call
       input_errors = input_result.errors
 
       return failure(format_errors("input", input_errors)) if input_errors.any?

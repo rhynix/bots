@@ -1,11 +1,11 @@
 module Bots
-  autoload :OperationsDeserializer, "bots/operations_deserializer"
-  autoload :Game,                   "bots/game"
-  autoload :GameState,              "bots/game_state"
-  autoload :CLI,                    "bots/cli"
-  autoload :Equatable,              "bots/equatable"
-  autoload :AssertionError,         "bots/assertion_error"
-  autoload :Server,                 "bots/server"
+  autoload :OperationsParser, "bots/operations_parser"
+  autoload :Game,             "bots/game"
+  autoload :GameState,        "bots/game_state"
+  autoload :CLI,              "bots/cli"
+  autoload :Equatable,        "bots/equatable"
+  autoload :AssertionError,   "bots/assertion_error"
+  autoload :Server,           "bots/server"
 
   autoload :PreValidator,  "bots/pre_validator"
   autoload :PostValidator, "bots/post_validator"
