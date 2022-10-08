@@ -13,28 +13,37 @@ file  = ARGV.first
 input = File.read(file)
 
 operations = Bots::OperationsDeserializer.new(input).call
-validator  = Bots::Validator.new(operations)
-errors     = validator.call
+pre_errors = Bots::PreValidator.new(operations).call
 
-if errors.any?
+if pre_errors.any?
   puts "One or more input errors:"
 
-  errors.each do |error|
+  pre_errors.each do |error|
     puts "* #{error}"
   end
 
   exit 1
 end
 
-game  = Bots::Game.new(operations)
-state = game.run
+state       = Bots::Game.new(operations).run
+post_errors = Bots::PostValidator.new(operations, state).call
+
+if post_errors.any?
+  puts "One or more output errors:"
+
+  post_errors.each do |error|
+    puts "* #{error}"
+  end
+
+  exit 1
+end
 
 outputs        = state.keys.filter { |entity| entity.is_a?(Bots::Output) }
 max_output_len = outputs.map { |output| output.id.to_s.length }.max
 
 outputs.sort_by(&:id).each do |output|
-  output_id = output.id.to_s.rjust(max_output_len, "0")
+  output_id = output.id.to_s.rjust(max_output_len)
   values    = state[output].join(", ")
 
-  puts "output(#{output_id}) = #{values}"
+  puts "output( #{output_id} ) = #{values}"
 end
