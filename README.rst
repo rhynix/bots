@@ -22,17 +22,17 @@ Running the application
 
 The application is available as a command line interface and a simple web
 server. The CLI tool accepts a path that points to a text based input file. For
-example:::
+example::
 
   $ bin/bots examples/input.txt
 
 The web server can be started using :code:`bin/server`. It accepts no command
 line arguments and listens to port 8080. The inputs can be POSTed to the web
-server root in a JSON array. For example, with cURL:::
+server root in a JSON array. For example, with cURL::
 
   $ curl --data @examples/input.json 127.0.0.1:8080
 
-Alternatively, the application can be run in a docker container. For example:::
+Alternatively, the server can be run in a docker container. For example::
 
   $ docker build -t bots:latest .
   $ docker run -p 8080:8080 bots:latest
@@ -79,7 +79,8 @@ This project was part of a challenge. This challenge poses two questions:
 2. What do you get if you multiply together the values of one chip in each of
    outputs 0, 1, and 2?
 
-Running `bin/answers` with the example inputs provides the following answers:::
+Running :code:`bin/answers` with the example inputs provides the following
+answers::
 
   $ bin/answers examples/input.txt
   Bot handling value-61 and value-17: 73
