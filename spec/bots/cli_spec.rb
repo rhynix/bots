@@ -75,11 +75,12 @@ RSpec.describe Bots::CLI do
           log:
             1 goes to bot(1)
             2 goes to bot(1)
+            bot(1) is comparing 1 to 2
             bot(1) gives 1 to output(2)
             bot(1) gives 2 to output(1)
-          outputs:
-            output( 1 ) = 2
-            output( 2 ) = 1
+          world:
+            output(2) = 1
+            output(1) = 2
         OUT
       end
     end

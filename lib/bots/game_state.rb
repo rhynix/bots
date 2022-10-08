@@ -23,16 +23,10 @@ module Bots
         out << "  #{log_item.to_s}\n"
       end
 
-      outputs        = world.keys.filter { |entity| entity.is_a?(Output) }
-      max_output_len = outputs.map { |output| output.id.to_s.length }.max
+      out << "world:\n"
 
-      out << "outputs:\n"
-
-      outputs.sort_by(&:id).each do |output|
-        output_id = output.id.to_s.rjust(max_output_len)
-        values    = world[output].join(", ")
-
-        out << "  output( #{output_id} ) = #{values}\n"
+      world.each do |entity, values|
+        out << "  #{entity} = #{values.join(", ")}\n" if values.any?
       end
 
       out
