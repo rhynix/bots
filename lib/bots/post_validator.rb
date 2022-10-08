@@ -45,7 +45,7 @@ module Bots
     end
 
     def input_values
-      operations.filter { |op| op.is_a?(GoesToOperation) }.map(&:value)
+      operations.filter { |op| op.is_a?(InputOperation) }.map(&:value)
     end
 
     def output_values

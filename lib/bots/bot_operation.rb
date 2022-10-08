@@ -1,5 +1,5 @@
 module Bots
-  class GivesToOperation
+  class BotOperation
     include Equatable[:from, :low_to, :high_to]
 
     attr_reader :from, :low_to, :high_to

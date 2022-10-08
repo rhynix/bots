@@ -1,5 +1,5 @@
 module Bots
-  class GoesToOperation
+  class InputOperation
     include Equatable[:value, :to]
 
     attr_reader :value, :to

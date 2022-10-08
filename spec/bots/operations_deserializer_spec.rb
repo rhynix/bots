@@ -9,8 +9,8 @@ RSpec.describe Bots::OperationsDeserializer do
       ])
 
       expect(deserializer.call.operations).to contain_exactly(
-        Bots::GoesToOperation.new(value: 6, to: Bots::Bot.new(119)),
-        Bots::GoesToOperation.new(value: 7, to: Bots::Bot.new(102))
+        Bots::InputOperation.new(value: 6, to: Bots::Bot.new(119)),
+        Bots::InputOperation.new(value: 7, to: Bots::Bot.new(102))
       )
     end
 
@@ -21,12 +21,12 @@ RSpec.describe Bots::OperationsDeserializer do
       ])
 
       expect(deserializer.call.operations).to contain_exactly(
-        Bots::GivesToOperation.new(
+        Bots::BotOperation.new(
           from: Bots::Bot.new(13),
           low_to: Bots::Bot.new(203),
           high_to: Bots::Bot.new(197)
         ),
-        Bots::GivesToOperation.new(
+        Bots::BotOperation.new(
           from: Bots::Bot.new(20),
           low_to: Bots::Bot.new(146),
           high_to: Bots::Bot.new(164)
@@ -41,12 +41,12 @@ RSpec.describe Bots::OperationsDeserializer do
       ])
 
       expect(deserializer.call.operations).to contain_exactly(
-        Bots::GivesToOperation.new(
+        Bots::BotOperation.new(
           from: Bots::Bot.new(13),
           low_to: Bots::Output.new(203),
           high_to: Bots::Output.new(197)
         ),
-        Bots::GivesToOperation.new(
+        Bots::BotOperation.new(
           from: Bots::Bot.new(20),
           low_to: Bots::Output.new(146),
           high_to: Bots::Output.new(164)
@@ -61,11 +61,11 @@ RSpec.describe Bots::OperationsDeserializer do
       ])
 
       expect(deserializer.call.operations).to contain_exactly(
-        Bots::GoesToOperation.new(
+        Bots::InputOperation.new(
           value: 6,
           to: Bots::Bot.new(119)
         ),
-        Bots::GivesToOperation.new(
+        Bots::BotOperation.new(
           from: Bots::Bot.new(13),
           low_to: Bots::Bot.new(203),
           high_to: Bots::Output.new(197)

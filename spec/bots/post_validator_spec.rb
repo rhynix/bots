@@ -4,8 +4,8 @@ RSpec.describe Bots::PostValidator do
   describe "#call" do
     it "returns an empty array if there are no errors" do
       operations = [
-        Bots::GoesToOperation.new(to: Bots::Bot.new(2), value: 6),
-        Bots::GoesToOperation.new(to: Bots::Bot.new(2), value: 8),
+        Bots::InputOperation.new(to: Bots::Bot.new(2), value: 6),
+        Bots::InputOperation.new(to: Bots::Bot.new(2), value: 8),
       ]
 
       state = {
@@ -20,9 +20,9 @@ RSpec.describe Bots::PostValidator do
 
     it "returns an error if not all values end up at outputs" do
       operations = [
-        Bots::GoesToOperation.new(to: Bots::Bot.new(1), value: 9),
-        Bots::GoesToOperation.new(to: Bots::Bot.new(2), value: 6),
-        Bots::GoesToOperation.new(to: Bots::Bot.new(2), value: 8),
+        Bots::InputOperation.new(to: Bots::Bot.new(1), value: 9),
+        Bots::InputOperation.new(to: Bots::Bot.new(2), value: 6),
+        Bots::InputOperation.new(to: Bots::Bot.new(2), value: 8),
       ]
 
       state = {
@@ -40,7 +40,7 @@ RSpec.describe Bots::PostValidator do
 
     it "returns an error if extra values end up at outputs" do
       operations = [
-        Bots::GoesToOperation.new(to: Bots::Bot.new(1), value: 9),
+        Bots::InputOperation.new(to: Bots::Bot.new(1), value: 9),
       ]
 
       state = {
@@ -57,8 +57,8 @@ RSpec.describe Bots::PostValidator do
 
     it "returns an error an output receives multiple values" do
       operations = [
-        Bots::GoesToOperation.new(to: Bots::Bot.new(1), value: 9),
-        Bots::GoesToOperation.new(to: Bots::Bot.new(2), value: 6),
+        Bots::InputOperation.new(to: Bots::Bot.new(1), value: 9),
+        Bots::InputOperation.new(to: Bots::Bot.new(2), value: 6),
       ]
 
       state = {

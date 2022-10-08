@@ -17,7 +17,7 @@ module Bots
     private
 
     def validate_one_operation_per_bot
-      bot_operations = operations_of_type(GivesToOperation).group_by(&:from)
+      bot_operations = operations_of_type(BotOperation).group_by(&:from)
 
       all_bots.flat_map do |bot|
         case bot_operations.fetch(bot, []).length
@@ -56,17 +56,17 @@ module Bots
     end
 
     def all_bots
-      goes_to_bots = operations_of_type(GoesToOperation)
+      goes_to_bots = operations_of_type(InputOperation)
         .map(&:to)
         .filter { |entity| entity.is_a?(Bot) }
 
-      gives_to_bots = operations_of_type(GivesToOperation).map(&:from)
+      gives_to_bots = operations_of_type(BotOperation).map(&:from)
 
       [*goes_to_bots, *gives_to_bots].uniq
     end
 
     def goes_to_operations_per_bot
-      operations_of_type(GoesToOperation)
+      operations_of_type(InputOperation)
         .filter { |operation| operation.to.is_a?(Bot) }
         .group_by(&:to)
     end

@@ -11,8 +11,8 @@ module Bots
   autoload :BotExecution,   "bots/bot_execution"
   autoload :InputExecution, "bots/input_execution"
 
-  autoload :GoesToOperation,  "bots/goes_to_operation"
-  autoload :GivesToOperation, "bots/gives_to_operation"
+  autoload :InputOperation,  "bots/input_operation"
+  autoload :BotOperation,    "bots/bot_operation"
 
   autoload :Bot,    "bots/bot"
   autoload :Output, "bots/output"

@@ -35,7 +35,7 @@ module Bots
         match = $~
         to    = entity(match[:entity]) or return nil
 
-        GoesToOperation.new(value: $~[:value].to_i, to: to)
+        InputOperation.new(value: $~[:value].to_i, to: to)
       when GIVES_TO_REGEXP
         match = $~
 
@@ -43,7 +43,7 @@ module Bots
         low_to  = entity(match[:low])  or return nil
         high_to = entity(match[:high]) or return nil
 
-        GivesToOperation.new(from: from, low_to: low_to, high_to: high_to)
+        BotOperation.new(from: from, low_to: low_to, high_to: high_to)
       else
         nil
       end

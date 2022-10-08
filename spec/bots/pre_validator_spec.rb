@@ -4,9 +4,9 @@ RSpec.describe Bots::PreValidator do
   describe "#call" do
     it "returns an empty array if there are no errors" do
       validator = described_class.new([
-        Bots::GoesToOperation.new(to: Bots::Bot.new(2), value: 6),
-        Bots::GoesToOperation.new(to: Bots::Bot.new(2), value: 8),
-        Bots::GivesToOperation.new(
+        Bots::InputOperation.new(to: Bots::Bot.new(2), value: 6),
+        Bots::InputOperation.new(to: Bots::Bot.new(2), value: 8),
+        Bots::BotOperation.new(
           from: Bots::Bot.new(2),
           low_to: Bots::Output.new(1),
           high_to: Bots::Output.new(2)
@@ -18,10 +18,10 @@ RSpec.describe Bots::PreValidator do
 
     it "returns an error if multiple bots start with two values" do
       validator = described_class.new([
-        Bots::GoesToOperation.new(to: Bots::Bot.new(2), value: 6),
-        Bots::GoesToOperation.new(to: Bots::Bot.new(2), value: 8),
-        Bots::GoesToOperation.new(to: Bots::Bot.new(6), value: 11),
-        Bots::GoesToOperation.new(to: Bots::Bot.new(6), value: 5),
+        Bots::InputOperation.new(to: Bots::Bot.new(2), value: 6),
+        Bots::InputOperation.new(to: Bots::Bot.new(2), value: 8),
+        Bots::InputOperation.new(to: Bots::Bot.new(6), value: 11),
+        Bots::InputOperation.new(to: Bots::Bot.new(6), value: 5),
       ])
 
       expect(validator.call).to include(
@@ -31,11 +31,11 @@ RSpec.describe Bots::PreValidator do
 
     it "returns an error if a bot starts with more than two values" do
       validator = described_class.new([
-        Bots::GoesToOperation.new(to: Bots::Bot.new(2), value: 6),
-        Bots::GoesToOperation.new(to: Bots::Bot.new(2), value: 8),
-        Bots::GoesToOperation.new(to: Bots::Bot.new(2), value: 1),
-        Bots::GoesToOperation.new(to: Bots::Bot.new(6), value: 8),
-        Bots::GoesToOperation.new(to: Bots::Bot.new(6), value: 11)
+        Bots::InputOperation.new(to: Bots::Bot.new(2), value: 6),
+        Bots::InputOperation.new(to: Bots::Bot.new(2), value: 8),
+        Bots::InputOperation.new(to: Bots::Bot.new(2), value: 1),
+        Bots::InputOperation.new(to: Bots::Bot.new(6), value: 8),
+        Bots::InputOperation.new(to: Bots::Bot.new(6), value: 11)
       ])
 
       expect(validator.call).to include(
@@ -45,12 +45,12 @@ RSpec.describe Bots::PreValidator do
 
     it "returns an error if a bot has more than one operation" do
       validator = described_class.new([
-        Bots::GivesToOperation.new(
+        Bots::BotOperation.new(
           from: Bots::Bot.new(2),
           low_to: Bots::Output.new(1),
           high_to: Bots::Output.new(2)
         ),
-        Bots::GivesToOperation.new(
+        Bots::BotOperation.new(
           from: Bots::Bot.new(2),
           low_to: Bots::Output.new(2),
           high_to: Bots::Output.new(1)
@@ -64,7 +64,7 @@ RSpec.describe Bots::PreValidator do
 
     it "returns an error if a bot has mno operations" do
       validator = described_class.new([
-        Bots::GoesToOperation.new(to: Bots::Bot.new(2), value: 6)
+        Bots::InputOperation.new(to: Bots::Bot.new(2), value: 6)
       ])
 
       expect(validator.call).to eq([

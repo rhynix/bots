@@ -19,8 +19,8 @@ module Bots
     def _run
       state = { log: [], current: {} }
 
-      state = run_ops(state, ops(GoesToOperation))
-      state = run_ops(state, ops(GivesToOperation)) until done?(state)
+      state = run_ops(state, ops(InputOperation))
+      state = run_ops(state, ops(BotOperation)) until done?(state)
 
       state
     end
