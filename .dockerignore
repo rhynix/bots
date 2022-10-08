@@ -1,0 +1,10 @@
+/.ruby-version
+/.gitigore
+
+/spec
+/examples
+
+/bin/rspec
+/Dockerfile
+/LICENSE
+/README.rst

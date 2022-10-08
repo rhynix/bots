@@ -14,7 +14,6 @@ COPY --chown=app:app Gemfile.lock Gemfile.lock
 
 RUN bundle install
 
-COPY --chown=app:app lib lib
-COPY --chown=app:app bin bin
+COPY --chown=app:app . .
 
-ENTRYPOINT ["bin/server"]
+CMD ["bin/server"]
