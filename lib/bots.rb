@@ -3,6 +3,7 @@ module Bots
   autoload :PreValidator,           "bots/pre_validator"
   autoload :PostValidator,          "bots/post_validator"
   autoload :Game,                   "bots/game"
+  autoload :CLI,                    "bots/cli"
   autoload :Equatable,              "bots/equatable"
   autoload :AssertionError,         "bots/assertion_error"
 

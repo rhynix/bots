@@ -4,46 +4,8 @@ $LOAD_PATH.unshift File.dirname(__FILE__) + "/../lib"
 
 require "bots"
 
-unless ARGV.length == 1
-  puts "usage: #{$0} input-file"
+if Bots::CLI.new($PROGRAM_NAME, ARGV, $stdout).run
+  exit 0
+else
   exit 1
-end
-
-file  = ARGV.first
-input = File.read(file)
-
-operations = Bots::OperationsDeserializer.new(input).call
-pre_errors = Bots::PreValidator.new(operations).call
-
-if pre_errors.any?
-  puts "One or more input errors:"
-
-  pre_errors.each do |error|
-    puts "* #{error}"
-  end
-
-  exit 1
-end
-
-state       = Bots::Game.new(operations).run
-post_errors = Bots::PostValidator.new(operations, state).call
-
-if post_errors.any?
-  puts "One or more output errors:"
-
-  post_errors.each do |error|
-    puts "* #{error}"
-  end
-
-  exit 1
-end
-
-outputs        = state.keys.filter { |entity| entity.is_a?(Bots::Output) }
-max_output_len = outputs.map { |output| output.id.to_s.length }.max
-
-outputs.sort_by(&:id).each do |output|
-  output_id = output.id.to_s.rjust(max_output_len)
-  values    = state[output].join(", ")
-
-  puts "output( #{output_id} ) = #{values}"
 end
