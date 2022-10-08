@@ -6,6 +6,7 @@ module Bots
   autoload :CLI,                    "bots/cli"
   autoload :Equatable,              "bots/equatable"
   autoload :AssertionError,         "bots/assertion_error"
+  autoload :Server,                 "bots/server"
 
   autoload :GoesToOperation,  "bots/goes_to_operation"
   autoload :GivesToOperation, "bots/gives_to_operation"
