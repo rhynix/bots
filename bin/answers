@@ -20,12 +20,10 @@ def product_of_outputs(output_ids, state)
   values.reduce(&:*)
 end
 
-unless ARGV.length == 1
-  warn "usage: #{$0} input-file"
-  exit 1
-end
+root       = Pathname.new(File.dirname(__FILE__)).join("..")
+input_path = root.join("examples/input.txt")
 
-cli    = Bots::CLI.new(ARGV.first)
+cli    = Bots::CLI.new(input_path)
 result = cli.run
 
 if result.success?

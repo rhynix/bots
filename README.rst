@@ -79,9 +79,8 @@ This project was part of a challenge. This challenge poses two questions:
 2. What do you get if you multiply together the values of one chip in each of
    outputs 0, 1, and 2?
 
-Running :code:`bin/answers` with the example inputs provides the following
-answers::
+Running :code:`bin/answers` provides the answers::
 
-  $ bin/answers examples/input.txt
+  $ bin/answers
   Bot handling value-61 and value-17: 73
   Product of output 0, 1, and 2: 3965
