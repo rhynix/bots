@@ -14,16 +14,16 @@ module Bots
       content_type :json
 
       inputs             = deserialize(request.body.read) or bad_request
-      deserialize_result = OperationsParser.new(inputs).call
+      deserialize_result = InstructionsParser.new(inputs).call
 
       bad_request deserialize_result.errors if deserialize_result.errors.any?
 
-      operations = deserialize_result.operations
-      pre_errors = PreValidator.new(operations).call
+      instructions = deserialize_result.instructions
+      pre_errors   = PreValidator.new(instructions).call
 
       bad_request pre_errors if pre_errors.any?
 
-      state       = run_game_with_timeout(operations)
+      state       = run_game_with_timeout(instructions)
       post_errors = PostValidator.new(state.world).call
 
       bad_request post_errors if post_errors.any?
@@ -33,15 +33,15 @@ module Bots
 
     private
 
-    def run_game_with_timeout(operations)
-      Game.new(operations).run
+    def run_game_with_timeout(instructions)
+      Game.new(instructions).run
     rescue Timeout::Error
       bad_request "timeout"
     end
 
     def serialize_outputs(state)
       outputs = state.world
-        .filter { |entity| entity.is_a?(Output) }
+        .filter { |entity| entity.is_a?(Entities::Output) }
         .transform_keys { |output| output.id.to_s }
         .transform_values(&:first)
 

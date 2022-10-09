@@ -2,31 +2,32 @@
 
 module Bots
   class PreValidator
-    attr_reader :operations
+    attr_reader :instructions
 
-    def initialize(operations)
-      @operations = operations
+    def initialize(instructions)
+      @instructions = instructions
     end
 
     def call
       [
         *validate_max_two_values_per_bot,
         *validate_one_bot_with_two_values,
-        *validate_one_operation_per_bot
+        *validate_one_instruction_per_bot
       ]
     end
 
     private
 
-    def validate_one_operation_per_bot
-      bot_operations = operations_of_type(BotOperation).group_by(&:from)
+    def validate_one_instruction_per_bot
+      bot_instructions = instructions_of_type(Instructions::BotInstruction)
+        .group_by(&:from)
 
       all_bots.flat_map do |bot|
-        case bot_operations.fetch(bot, []).length
+        case bot_instructions.fetch(bot, []).length
         when 0
-          [Error.new("#{bot} has no operations")]
+          [Error.new("#{bot} has no instructions")]
         when (2..)
-          [Error.new("#{bot} has more than one operation")]
+          [Error.new("#{bot} has more than one instruction")]
         else
           []
         end
@@ -34,12 +35,13 @@ module Bots
     end
 
     def validate_one_bot_with_two_values
-      bots       = goes_to_operations_per_bot.keys
-      start_bots = bots.filter { |b| goes_to_operations_per_bot[b].length == 2 }
+      bots = input_instructions_per_bot
+        .filter { |bot, values| values.length == 2 }
+        .keys
 
-      if start_bots.length > 1
-        start_bots = start_bots.join(", ")
-        message    = "multiple bots start with two values: #{start_bots}"
+      if bots.length > 1
+        bots    = bots.join(", ")
+        message = "multiple bots start with two values: #{bots}"
 
         [Error.new(message)]
       else
@@ -48,7 +50,7 @@ module Bots
     end
 
     def validate_max_two_values_per_bot
-      goes_to_operations_per_bot.flat_map do |bot, ops|
+      input_instructions_per_bot.flat_map do |bot, ops|
         if ops.length > 2
           [Error.new("#{bot} starts with more than two values")]
         else
@@ -58,23 +60,24 @@ module Bots
     end
 
     def all_bots
-      goes_to_bots = operations_of_type(InputOperation)
+      goes_to_bots = instructions_of_type(Instructions::InputInstruction)
         .map(&:to)
-        .filter { |entity| entity.is_a?(Bot) }
+        .filter { |entity| entity.is_a?(Entities::Bot) }
 
-      gives_to_bots = operations_of_type(BotOperation).map(&:from)
+      gives_to_bots = instructions_of_type(Instructions::BotInstruction)
+        .map(&:from)
 
       [*goes_to_bots, *gives_to_bots].uniq
     end
 
-    def goes_to_operations_per_bot
-      operations_of_type(InputOperation)
-        .filter { |operation| operation.to.is_a?(Bot) }
+    def input_instructions_per_bot
+      instructions_of_type(Instructions::InputInstruction)
+        .filter { |instruction| instruction.to.is_a?(Entities::Bot) }
         .group_by(&:to)
     end
 
-    def operations_of_type(type)
-      operations.filter { |operation| operation.is_a?(type) }
+    def instructions_of_type(type)
+      instructions.filter { |instruction| instruction.is_a?(type) }
     end
   end
 end

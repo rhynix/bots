@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-RSpec.describe Bots::Output do
+RSpec.describe Bots::Entities::Output do
   describe "#to_s" do
     let(:output) { described_class.new(42) }
 

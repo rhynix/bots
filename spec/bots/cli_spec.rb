@@ -29,7 +29,7 @@ RSpec.describe Bots::CLI do
       it "returns the errors as out" do
         expect(result.out.formatted).to eq(<<~OUT)
           input errors:
-            bot(1) has no operations
+            bot(1) has no instructions
         OUT
       end
     end

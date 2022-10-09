@@ -26,7 +26,7 @@ module Bots
     end
 
     def outputs
-      world.filter { |entity| entity.is_a?(Output) }
+      world.filter { |entity| entity.is_a?(Entities::Output) }
     end
   end
 end

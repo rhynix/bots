@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 module Bots
-  class OperationsParser
-    Result = Struct.new(:operations, :errors)
+  class InstructionsParser
+    Result = Struct.new(:instructions, :errors)
 
-    ENTITY_REGEXP   = /\A(?<type>\w+) (?<id>\d+)\Z/i
-    GOES_TO_REGEXP  = /\Avalue (?<value>\d+) goes to (?<entity>\w+ \d+)\Z/i
-    GIVES_TO_REGEXP = /\A(?<from>\w+ \d+) gives low to (?<low>\w+ \d+) and high to (?<high>\w+ \d+)\Z/i
+    ENTITY_REGEXP = /\A(?<type>\w+) (?<id>\d+)\Z/i
+    INPUT_REGEXP  = /\Avalue (?<value>\d+) goes to (?<entity>\w+ \d+)\Z/i
+    BOT_REGEXP    = /\A(?<from>\w+ \d+) gives low to (?<low>\w+ \d+) and high to (?<high>\w+ \d+)\Z/i
 
     attr_reader :inputs
 
@@ -18,8 +18,8 @@ module Bots
       result = Result.new([], [])
 
       inputs.each do |input|
-        if operation = deserialize(input)
-          result.operations << operation
+        if instruction = parse(input)
+          result.instructions << instruction
         else
           result.errors << Error.new("invalid input: #{input}")
         end
@@ -30,21 +30,25 @@ module Bots
 
     private
 
-    def deserialize(line)
+    def parse(line)
       case line
-      when GOES_TO_REGEXP
+      when INPUT_REGEXP
         match = $~
         to    = entity(match[:entity]) or return nil
 
-        InputOperation.new(value: $~[:value].to_i, to: to)
-      when GIVES_TO_REGEXP
+        Instructions::InputInstruction.new(value: $~[:value].to_i, to: to)
+      when BOT_REGEXP
         match = $~
 
         from    = entity(match[:from]) or return nil
         low_to  = entity(match[:low])  or return nil
         high_to = entity(match[:high]) or return nil
 
-        BotOperation.new(from: from, low_to: low_to, high_to: high_to)
+        Instructions::BotInstruction.new(
+          from: from,
+          low_to: low_to,
+          high_to: high_to
+        )
       else
         nil
       end
@@ -59,8 +63,8 @@ module Bots
 
     def entity_class(type)
       case type
-      when 'bot'    then Bot
-      when 'output' then Output
+      when 'bot'    then Entities::Bot
+      when 'output' then Entities::Output
       else nil
       end
     end

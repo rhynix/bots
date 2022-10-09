@@ -2,13 +2,13 @@
 
 require "spec_helper"
 
-RSpec.describe Bots::BotOperation do
+RSpec.describe Bots::Instructions::BotInstruction do
   describe "#run_on" do
-    let(:bot) { Bots::Bot.new(42) }
-    let(:receiver_low)  { Bots::Bot.new(44) }
-    let(:receiver_high) { Bots::Bot.new(43) }
+    let(:bot) { Bots::Entities::Bot.new(42) }
+    let(:receiver_low)  { Bots::Entities::Bot.new(44) }
+    let(:receiver_high) { Bots::Entities::Bot.new(43) }
 
-    let(:operation) do
+    let(:instruction) do
       described_class.new(
         from: bot,
         low_to: receiver_low,
@@ -20,26 +20,26 @@ RSpec.describe Bots::BotOperation do
       let(:original_state) do
         Bots::GameState.new(
           log: [
-            Bots::InputLogItem.new(to: receiver_low, value: 10)
+            Bots::Log::InputGiveItem.new(to: receiver_low, value: 10)
           ],
           world: {
             receiver_low => [10]
           }
         )
       end
-      let(:state) { operation.run_on(original_state) }
+      let(:state) { instruction.run_on(original_state) }
 
       it "returns the original state" do
         expect(state).to be(original_state)
       end
     end
 
-    context "the from bot has one values" do
+    context "the from bot has one value" do
       let(:original_state) do
         Bots::GameState.new(
           log: [
-            Bots::InputLogItem.new(to: receiver_low, value: 10),
-            Bots::InputLogItem.new(to: bot, value: 6)
+            Bots::Log::InputGiveItem.new(to: receiver_low, value: 10),
+            Bots::Log::InputGiveItem.new(to: bot, value: 6)
           ],
           world: {
             bot => [6],
@@ -47,7 +47,7 @@ RSpec.describe Bots::BotOperation do
           }
         )
       end
-      let(:state) { operation.run_on(original_state) }
+      let(:state) { instruction.run_on(original_state) }
 
       it "returns the original state" do
         expect(state).to be(original_state)
@@ -58,9 +58,9 @@ RSpec.describe Bots::BotOperation do
       let(:original_state) do
         Bots::GameState.new(
           log: [
-            Bots::InputLogItem.new(to: receiver_low, value: 10),
-            Bots::InputLogItem.new(to: bot, value: 6),
-            Bots::InputLogItem.new(to: bot, value: 3)
+            Bots::Log::InputGiveItem.new(to: receiver_low, value: 10),
+            Bots::Log::InputGiveItem.new(to: bot, value: 6),
+            Bots::Log::InputGiveItem.new(to: bot, value: 3)
           ],
           world: {
             bot => [6, 3],
@@ -68,16 +68,16 @@ RSpec.describe Bots::BotOperation do
           }
         )
       end
-      let(:state) { operation.run_on(original_state) }
+      let(:state) { instruction.run_on(original_state) }
 
       it "returns the state with extra log items" do
         expect(state.log).to eq([
-          Bots::InputLogItem.new(to: receiver_low, value: 10),
-          Bots::InputLogItem.new(to: bot, value: 6),
-          Bots::InputLogItem.new(to: bot, value: 3),
-          Bots::BotCompareLogItem.new(bot: bot, values: Set[3, 6]),
-          Bots::BotGiveLogItem.new(from: bot, to: receiver_low, value: 3),
-          Bots::BotGiveLogItem.new(from: bot, to: receiver_high, value: 6)
+          Bots::Log::InputGiveItem.new(to: receiver_low, value: 10),
+          Bots::Log::InputGiveItem.new(to: bot, value: 6),
+          Bots::Log::InputGiveItem.new(to: bot, value: 3),
+          Bots::Log::BotCompareItem.new(bot: bot, values: Set[3, 6]),
+          Bots::Log::BotGiveItem.new(from: bot, to: receiver_low, value: 3),
+          Bots::Log::BotGiveItem.new(from: bot, to: receiver_high, value: 6)
         ])
       end
 

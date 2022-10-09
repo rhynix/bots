@@ -2,18 +2,18 @@
 
 require "spec_helper"
 
-RSpec.describe Bots::InputOperation do
+RSpec.describe Bots::Instructions::InputInstruction do
   describe "#run_on" do
-    let(:bot) { Bots::Bot.new(42) }
-    let(:operation) { described_class.new(value: 6, to: bot) }
+    let(:bot) { Bots::Entities::Bot.new(42) }
+    let(:instruction) { described_class.new(value: 6, to: bot) }
 
     context "the entity already has no value" do
       let(:original_state) { Bots::GameState.new }
-      let(:state) { operation.run_on(original_state) }
+      let(:state) { instruction.run_on(original_state) }
 
       it "returns a state with an added log item" do
         expect(state.log).to eq([
-          Bots::InputLogItem.new(value: 6, to: bot)
+          Bots::Log::InputGiveItem.new(value: 6, to: bot)
         ])
       end
 
@@ -25,17 +25,17 @@ RSpec.describe Bots::InputOperation do
     context "the entity already has a value" do
       let(:original_state) do
         Bots::GameState.new(
-          log: [Bots::InputLogItem.new(value: 3, to: bot)],
-          world: { Bots::Bot.new(42) => [3] }
+          log: [Bots::Log::InputGiveItem.new(value: 3, to: bot)],
+          world: { bot => [3] }
         )
       end
 
-      let(:state) { operation.run_on(original_state) }
+      let(:state) { instruction.run_on(original_state) }
 
       it "returns a state with an added log item" do
         expect(state.log).to eq([
-          Bots::InputLogItem.new(value: 3, to: bot),
-          Bots::InputLogItem.new(value: 6, to: bot)
+          Bots::Log::InputGiveItem.new(value: 3, to: bot),
+          Bots::Log::InputGiveItem.new(value: 6, to: bot)
         ])
       end
 

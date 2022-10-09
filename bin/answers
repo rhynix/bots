@@ -9,12 +9,14 @@ require "set"
 require "bots"
 
 def bot_comparing(values, state)
-  comparisons = state.log.filter { |item| item.is_a?(Bots::BotCompareLogItem) }
+  comparisons = state.log.filter { |i| i.is_a?(Bots::Log::BotCompareItem) }
   comparisons.detect { |item| item.values == values }.bot
 end
 
 def product_of_outputs(output_ids, state)
-  values = output_ids.map { |id| state.world[Bots::Output.new(id)].first }
+  outputs = output_ids.map { |id| Bots::Entities::Output.new(id) }
+  values  = outputs.map { |output| state.world[output].first }
+
   values.reduce(&:*)
 end
 

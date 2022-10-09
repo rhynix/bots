@@ -2,18 +2,17 @@
 
 require "spec_helper"
 
-RSpec.describe Bots::BotGiveLogItem do
+RSpec.describe Bots::Log::BotCompareItem do
   describe "#to_s" do
     let(:item) do
       described_class.new(
-        from: Bots::Bot.new(42),
-        to: Bots::Output.new(43),
-        value: 6
+        bot: Bots::Entities::Bot.new(42),
+        values: Set[4, 2]
       )
     end
 
     it "renders the type and id" do
-      expect(item.to_s).to eq("bot(42) gives 6 to output(43)")
+      expect(item.to_s).to eq("bot(42) is comparing 2 to 4")
     end
   end
 end

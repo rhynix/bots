@@ -14,17 +14,17 @@ module Bots
       input  = File.read(input_path)
       inputs = input.lines.map(&:strip)
 
-      input_result = OperationsParser.new(inputs).call
+      input_result = InstructionsParser.new(inputs).call
       input_errors = input_result.errors
 
       return failure("input", input_errors) if input_errors.any?
 
-      operations = input_result.operations
-      pre_errors = PreValidator.new(operations).call
+      instructions = input_result.instructions
+      pre_errors   = PreValidator.new(instructions).call
 
       return failure("input", pre_errors) if pre_errors.any?
 
-      state       = Game.new(operations).run
+      state       = Game.new(instructions).run
       post_errors = PostValidator.new(state.world).call
 
       return failure("output", post_errors) if post_errors.any?

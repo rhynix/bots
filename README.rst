@@ -60,8 +60,8 @@ Since running the application with the example dataset is relatively fast,
 simplicity was chosen over optimizing for performance. This means there are some
 potential performance optimizations, including:
 
-* Not trying all operations each time. If bot X gives chips to bot Y and Z,
-  checking only operations for bot Y and Z would suffice to keep the game
+* Not trying all instructions each time. If bot X gives chips to bot Y and Z,
+  checking only instructions for bot Y and Z would suffice to keep the game
   running.
 * Mutable state: the library barely contains any mutable state. This was an
   intential choice to make reasoning about the code easier. Immutable state

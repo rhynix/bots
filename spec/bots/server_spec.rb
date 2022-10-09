@@ -27,7 +27,7 @@ RSpec.describe Bots::Server do
     end
 
     context "request body is not json" do
-      let(:body) { "<operations><operations />" }
+      let(:body) { "<instructions><instructions />" }
 
       it "responds with bad request" do
         post "/", body
@@ -43,7 +43,7 @@ RSpec.describe Bots::Server do
     end
 
     context "request body does not match schema" do
-      let(:body) { JSON.dump({ "operations" => {} }) }
+      let(:body) { JSON.dump({ "instructions" => {} }) }
 
       it "responds with bad request" do
         post "/", body
