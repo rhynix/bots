@@ -13,19 +13,23 @@ module Bots
     post "/" do
       content_type :json
 
-      inputs             = deserialize(request.body.read) or bad_request
-      deserialize_result = InstructionsParser.new(inputs).call
+      lines        = deserialize(request.body.read) or bad_request
+      parse_result = InstructionsParser.new(lines).call
 
-      bad_request deserialize_result.errors if deserialize_result.errors.any?
+      bad_request parse_result.errors if parse_result.errors.any?
 
-      instructions = deserialize_result.instructions
-      pre_errors   = PreValidator.new(instructions).call
-
+      pre_errors = PreValidator.new(
+        input_instructions: parse_result.input_instructions,
+        bot_instructions: parse_result.bot_instructions
+      ).call
       bad_request pre_errors if pre_errors.any?
 
-      state       = run_game_with_timeout(instructions)
-      post_errors = PostValidator.new(state.world).call
+      state = Game.new(
+        input_instructions: parse_result.input_instructions,
+        bot_instructions: parse_result.bot_instructions
+      ).run
 
+      post_errors = PostValidator.new(state.world).call
       bad_request post_errors if post_errors.any?
 
       JSON.dump(serialize_outputs(state))

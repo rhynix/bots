@@ -2,10 +2,11 @@
 
 module Bots
   class PreValidator
-    attr_reader :instructions
+    attr_reader :input_instructions, :bot_instructions
 
-    def initialize(instructions)
-      @instructions = instructions
+    def initialize(input_instructions:, bot_instructions:)
+      @input_instructions = input_instructions
+      @bot_instructions   = bot_instructions
     end
 
     def call
@@ -19,11 +20,10 @@ module Bots
     private
 
     def validate_one_instruction_per_bot
-      bot_instructions = instructions_of_type(Instructions::BotInstruction)
-        .group_by(&:from)
+      bot_instructions_per_bot = bot_instructions.group_by(&:from)
 
       all_bots.flat_map do |bot|
-        case bot_instructions.fetch(bot, []).length
+        case bot_instructions_per_bot.fetch(bot, []).length
         when 0
           [Error.new("#{bot} has no instructions")]
         when (2..)
@@ -50,8 +50,8 @@ module Bots
     end
 
     def validate_max_two_values_per_bot
-      input_instructions_per_bot.flat_map do |bot, ops|
-        if ops.length > 2
+      input_instructions_per_bot.flat_map do |bot, instructions|
+        if instructions.length > 2
           [Error.new("#{bot} starts with more than two values")]
         else
           []
@@ -60,24 +60,20 @@ module Bots
     end
 
     def all_bots
-      goes_to_bots = instructions_of_type(Instructions::InputInstruction)
-        .map(&:to)
-        .filter { |entity| entity.is_a?(Entities::Bot) }
+      entities = [
+        *input_instructions.map(&:to),
+        *bot_instructions.map(&:from),
+        *bot_instructions.map(&:low_to),
+        *bot_instructions.map(&:high_to)
+      ]
 
-      gives_to_bots = instructions_of_type(Instructions::BotInstruction)
-        .map(&:from)
-
-      [*goes_to_bots, *gives_to_bots].uniq
+      entities.filter { |entity| entity.is_a?(Entities::Bot) }.uniq
     end
 
     def input_instructions_per_bot
-      instructions_of_type(Instructions::InputInstruction)
+      input_instructions
         .filter { |instruction| instruction.to.is_a?(Entities::Bot) }
         .group_by(&:to)
-    end
-
-    def instructions_of_type(type)
-      instructions.filter { |instruction| instruction.is_a?(type) }
     end
   end
 end

@@ -11,22 +11,26 @@ module Bots
     end
 
     def run
-      input  = File.read(input_path)
-      inputs = input.lines.map(&:strip)
+      contents = File.read(input_path)
+      lines    = contents.lines.map(&:strip)
 
-      input_result = InstructionsParser.new(inputs).call
-      input_errors = input_result.errors
+      parse_result = InstructionsParser.new(lines).call
+      parse_errors = parse_result.errors
 
-      return failure("input", input_errors) if input_errors.any?
+      return failure("parse", parse) if parse_errors.any?
 
-      instructions = input_result.instructions
-      pre_errors   = PreValidator.new(instructions).call
-
+      pre_errors = PreValidator.new(
+        input_instructions: parse_result.input_instructions,
+        bot_instructions: parse_result.bot_instructions
+      ).call
       return failure("input", pre_errors) if pre_errors.any?
 
-      state       = Game.new(instructions).run
-      post_errors = PostValidator.new(state.world).call
+      state = Game.new(
+        input_instructions: parse_result.input_instructions,
+        bot_instructions: parse_result.bot_instructions
+      ).run
 
+      post_errors = PostValidator.new(state.world).call
       return failure("output", post_errors) if post_errors.any?
 
       return success(state)

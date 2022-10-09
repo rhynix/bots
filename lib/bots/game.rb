@@ -4,10 +4,11 @@ require "timeout"
 
 module Bots
   class Game
-    attr_reader :instructions
+    attr_reader :input_instructions, :bot_instructions
 
-    def initialize(instructions)
-      @instructions = instructions
+    def initialize(input_instructions:, bot_instructions:)
+      @input_instructions = input_instructions
+      @bot_instructions   = bot_instructions
     end
 
     def run(timeout: 5)
@@ -36,18 +37,6 @@ module Bots
       instructions.reduce(state) do |state, instruction|
         instruction.run_on(state)
       end
-    end
-
-    def input_instructions
-      instructions_of_type(Instructions::InputInstruction)
-    end
-
-    def bot_instructions
-      instructions_of_type(Instructions::BotInstruction)
-    end
-
-    def instructions_of_type(type)
-      instructions.filter { |instruction| instruction.is_a?(type) }
     end
   end
 end

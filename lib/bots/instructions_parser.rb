@@ -2,7 +2,7 @@
 
 module Bots
   class InstructionsParser
-    Result = Struct.new(:instructions, :errors)
+    Result = Struct.new(:input_instructions, :bot_instructions, :errors)
 
     ENTITY_REGEXP = /\A(?<type>\w+) (?<id>\d+)\Z/i
     INPUT_REGEXP  = /\Avalue (?<value>\d+) goes to (?<entity>\w+ \d+)\Z/i
@@ -15,14 +15,20 @@ module Bots
     end
 
     def call
-      result = Result.new([], [])
+      result = Result.new([], [], [])
 
-      inputs.each do |input|
-        if instruction = parse(input)
-          result.instructions << instruction
-        else
-          result.errors << Error.new("invalid input: #{input}")
+      inputs.each do |line|
+        if instruction = try_parse_input_instruction(line)
+          result.input_instructions << instruction
+          next
         end
+
+        if instruction = try_parse_bot_instruction(line)
+          result.bot_instructions << instruction
+          next
+        end
+
+        result.errors << Error.new("invalid input: #{line}")
       end
 
       result
@@ -30,28 +36,25 @@ module Bots
 
     private
 
-    def parse(line)
-      case line
-      when INPUT_REGEXP
-        match = $~
-        to    = entity(match[:entity]) or return nil
+    def try_parse_input_instruction(line)
+      return nil unless match = INPUT_REGEXP.match(line)
+      return nil unless to = entity(match[:entity])
 
-        Instructions::InputInstruction.new(value: $~[:value].to_i, to: to)
-      when BOT_REGEXP
-        match = $~
+      Instructions::InputInstruction.new(value: match[:value].to_i, to: to)
+    end
 
-        from    = entity(match[:from]) or return nil
-        low_to  = entity(match[:low])  or return nil
-        high_to = entity(match[:high]) or return nil
+    def try_parse_bot_instruction(line)
+      return nil unless match = BOT_REGEXP.match(line)
 
-        Instructions::BotInstruction.new(
-          from: from,
-          low_to: low_to,
-          high_to: high_to
-        )
-      else
-        nil
-      end
+      return nil unless from    = entity(match[:from])
+      return nil unless low_to  = entity(match[:low])
+      return nil unless high_to = entity(match[:high])
+
+      Instructions::BotInstruction.new(
+        from: from,
+        low_to: low_to,
+        high_to: high_to
+      )
     end
 
     def entity(input)
