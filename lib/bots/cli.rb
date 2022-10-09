@@ -25,7 +25,7 @@ module Bots
       return failure("input", pre_errors) if pre_errors.any?
 
       state       = Game.new(operations).run
-      post_errors = PostValidator.new(operations, state.world).call
+      post_errors = PostValidator.new(state.world).call
 
       return failure("output", post_errors) if post_errors.any?
 

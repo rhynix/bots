@@ -24,7 +24,7 @@ module Bots
       bad_request pre_errors if pre_errors.any?
 
       state       = run_game_with_timeout(operations)
-      post_errors = PostValidator.new(operations, state.world).call
+      post_errors = PostValidator.new(state.world).call
 
       bad_request post_errors if post_errors.any?
 

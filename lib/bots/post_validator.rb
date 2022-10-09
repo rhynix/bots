@@ -2,11 +2,10 @@
 
 module Bots
   class PostValidator
-    attr_reader :operations, :world
+    attr_reader :world
 
-    def initialize(operations, world)
-      @operations = operations
-      @world      = world
+    def initialize(world)
+      @world = world
     end
 
     def call
