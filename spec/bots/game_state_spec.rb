@@ -80,4 +80,42 @@ RSpec.describe Bots::GameState do
       EOF
     end
   end
+
+  describe "#as_json" do
+    it "includes log items" do
+      state = described_class.new(
+        log: [
+          Bots::Log::InputGiveItem.new(
+            to: Bots::Entities::Output.new(42), value: 6
+          ),
+          Bots::Log::InputGiveItem.new(
+            to: Bots::Entities::Bot.new(42), value: 12
+          )
+        ]
+      )
+
+      expect(state.as_json).to include({
+        log: [
+          "6 goes to output(42)",
+          "12 goes to bot(42)"
+        ]
+      })
+    end
+
+    it "includes the world" do
+      state = described_class.new(
+        world: {
+          Bots::Entities::Output.new(42) => [6],
+          Bots::Entities::Bot.new(43) => [3]
+        }
+      )
+
+      expect(state.as_json).to include({
+        world: {
+          "output(42)" => [6],
+          "bot(43)" => [3]
+        }
+      })
+    end
+  end
 end

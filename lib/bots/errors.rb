@@ -19,5 +19,9 @@ module Bots
 
       out
     end
+
+    def as_json
+      { "errors" => errors.map(&:to_s) }
+    end
   end
 end

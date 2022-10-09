@@ -1,19 +1,16 @@
 # frozen_string_literal: true
 
 module Bots
-  class CLI
+  class Runner
     Result = Struct.new(:success?, :out)
 
-    attr_reader :input_path
+    attr_reader :lines
 
-    def initialize(input_path)
-      @input_path = input_path
+    def initialize(lines)
+      @lines = lines
     end
 
     def run
-      contents = File.read(input_path)
-      lines    = contents.lines.map(&:strip)
-
       parse_result = InstructionsParser.new(lines).call
       parse_errors = parse_result.errors
 

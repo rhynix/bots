@@ -17,4 +17,20 @@ RSpec.describe Bots::Errors do
       EOF
     end
   end
+
+  describe "#as_json" do
+    it "returns the errors" do
+      errors = described_class.new("input", [
+        Bots::Error.new("invalid input: bot 1 destroys all humans"),
+        Bots::Error.new("bot(2) starts with more than two values")
+      ])
+
+      expect(errors.as_json).to eq({
+        "errors" => [
+          "invalid input: bot 1 destroys all humans",
+          "bot(2) starts with more than two values"
+        ]
+      })
+    end
+  end
 end

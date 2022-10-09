@@ -4,7 +4,7 @@ module Bots
   autoload :InstructionsParser, "bots/instructions_parser"
   autoload :Game,               "bots/game"
   autoload :GameState,          "bots/game_state"
-  autoload :CLI,                "bots/cli"
+  autoload :Runner,             "bots/runner"
   autoload :Equatable,          "bots/equatable"
   autoload :Server,             "bots/server"
   autoload :Entities,           "bots/entities"

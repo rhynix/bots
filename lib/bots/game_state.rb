@@ -33,5 +33,12 @@ module Bots
 
       out
     end
+
+    def as_json
+      {
+        log: log.map(&:to_s),
+        world: world.filter { |_, values| values.any? }.transform_keys(&:to_s)
+      }
+    end
   end
 end

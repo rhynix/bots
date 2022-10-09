@@ -3,23 +3,11 @@
 require "spec_helper"
 require "tempfile"
 
-RSpec.describe Bots::CLI do
-  def with_input_file(input)
-    Tempfile.open do |file|
-      file.write input
-      file.rewind
-
-      yield file.path
-    end
-  end
-
+RSpec.describe Bots::Runner do
   describe "#call" do
     context "the input is invalid" do
       let(:result) do
-        with_input_file("value 1 goes to bot 1") do |path|
-          cli = described_class.new(path)
-          cli.run
-        end
+        described_class.new(["value 1 goes to bot 1"]).run
       end
 
       it "returns failure" do
@@ -35,19 +23,12 @@ RSpec.describe Bots::CLI do
     end
 
     context "the game is successful" do
-      let(:input) do
-        <<~INPUT
-          value 1 goes to bot 1
-          value 2 goes to bot 1
-          bot 1 gives low to output 2 and high to output 1
-        INPUT
-      end
-
       let(:result) do
-        with_input_file(input) do |path|
-          cli = described_class.new(path)
-          cli.run
-        end
+        described_class.new([
+          "value 1 goes to bot 1",
+          "value 2 goes to bot 1",
+          "bot 1 gives low to output 2 and high to output 1"
+        ]).run
       end
 
       it "returns success" do
@@ -70,18 +51,11 @@ RSpec.describe Bots::CLI do
     end
 
     context "the output is invalid" do
-      let(:input) do
-        <<~INPUT
-          value 1 goes to output 1
-          value 2 goes to output 1
-        INPUT
-      end
-
       let(:result) do
-        with_input_file(input) do |path|
-          cli = described_class.new(path)
-          cli.run
-        end
+        described_class.new([
+          "value 1 goes to output 1",
+          "value 2 goes to output 1"
+        ]).run
       end
 
       it "returns failure" do

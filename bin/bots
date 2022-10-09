@@ -12,8 +12,11 @@ unless ARGV.length == 1
   exit 1
 end
 
-cli    = Bots::CLI.new(ARGV.first)
-result = cli.run
+contents = File.read(ARGV.first)
+lines    = contents.lines.map(&:strip)
+
+runner = Bots::Runner.new(lines)
+result = runner.run
 
 if result.success?
   puts result.out.formatted

@@ -23,8 +23,11 @@ end
 root       = Pathname.new(File.dirname(__FILE__)).join("..")
 input_path = root.join("examples/input.txt")
 
-cli    = Bots::CLI.new(input_path)
-result = cli.run
+contents = File.read(input_path)
+lines    = contents.lines.map(&:strip)
+
+runner = Bots::Runner.new(lines)
+result = runner.run
 
 if result.success?
   state   = result.out

@@ -105,9 +105,9 @@ RSpec.describe Bots::Server do
             "1 goes to output(1)",
             "2 goes to output(2)"
           ],
-          "outputs" => {
-            "1" => 1,
-            "2" => 2
+          "world" => {
+            "output(1)" => [1],
+            "output(2)" => [2]
           }
         })
       end
